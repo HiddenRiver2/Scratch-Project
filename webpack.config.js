@@ -1,48 +1,48 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  mode: process.env.NODE_ENV,
-  entry: {
-    src: './src/index.tsx'
-  },
+  mode: 'development',
+  entry: './src/app.tsx',
   output: {
+    path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'build')
   },
-  plugins: [
-    new MiniCSSExtractPlugin(),
-    new HtmlWebpackPlugin({
-     title: 'Development',
-     template: 'index.html'
-    }),
-  ],
   module: {
     rules: [
       {
-        test: /\.(js|ts)x?$/,
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
-        options: {
-          presets: ['@babel/env', '@babel/react', '@babel/preset-typescript']
-        }
+        use: ['babel-loader'],
       },
       {
-        test: /\.s?css$/,
-        use: [
-          'style-loader', 'css-loader', 'sass-loader'
-        ]
-      }
-    ]
+        test: /\.(ts|tsx)$/,
+        exclude: /node_modules/,
+        use: ['ts-loader'],
+      },
+    ],
   },
+  resolve: {
+    extensions: ['.jsx', '.js', '.ts', '.tsx'],
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './index.html',
+      filename: './index.html',
+    }),
+    new CopyPlugin({
+      patterns: [{ from: './src/scss/_game.scss' }],
+    }),
+  ],
   devServer: {
     static: {
-      publicPath: '/build',
-      directory: path.resolve(__dirname, 'build')
+      directory: path.join(__dirname, './dist'),
     },
     proxy: {
-      '/': 'http://localhost:3000'
+      '/api': 'http://localhost:3000',
+      secure: false
     }
-  }
-};
+  },
+
+}
