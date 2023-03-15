@@ -2,12 +2,12 @@ import express, {Request, Response, NextFunction, RequestHandler} from 'express'
 const userController = require('./Controllers/userController');
 const app = express();
 const path = require('path');
+const apiRouter = require('./Routers/apiRouter')
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-app.get('/api', userController.createUser, (req, res, next) => res.json(res.locals.user));
-app.post('/api', userController.verifyUser, (req, res, next) => res.json(res.locals.user));
-app.get('/api', userController.getFunds, (req, res, next) => res.json(res.locals.funds));
-app.post('/api', userController.updateFunds, (req, res, next) => res.json(res.locals.funds));
+app.use('/api', apiRouter);
 
 if (process.env.NODE_ENV === 'production') {
 

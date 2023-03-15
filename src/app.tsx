@@ -5,6 +5,9 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import Table from './components/Table';
 
+import styles from './scss/application.scss';
+
+
 const App = () => {
   return(
     <BrowserRouter>

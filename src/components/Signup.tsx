@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-
+import styles from '../scss/application.scss';
 
 const Signup = () => {
 
   const navigate = useNavigate();
-  const signupURL = 'http://localhost:3000/signup'
+  const signupURL = 'http://localhost:8080/api/createUser'
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = () => {
     event?.preventDefault();
-    const {username, password} = document.forms[0];
+    // const {username, password} = document.forms[0];
     async function request() {
       const userData = await fetch(
         signupURL, {
@@ -25,6 +25,7 @@ const Signup = () => {
       )
       .then(res => res.json())
       .then(returnData => {
+        console.log("What is returnData in Signup?", returnData);
         return returnData
       })
       .catch((err) => console.log('Error verifying Login', err));
@@ -35,7 +36,7 @@ const Signup = () => {
         return navigate("/signup")
       }
     };
-
+    request();
   }
 
   const handleClick = () => {

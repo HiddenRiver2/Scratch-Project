@@ -1,30 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
+import styles from '../scss/application.scss';
+
 
 const Login = () => {
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [uname, setUname] = useState("");
+  const [pass, setPass] = useState("");
 
 
   const navigate = useNavigate();
-  const loginURL = 'http://localhost:3000/login';
+  const loginURL = 'api/verifyUser';
 
   const handleSubmit = () => {
     event?.preventDefault();
-    const {username, password} = document.forms[0];
+    // const {username, password} = document.forms[0];
+    console.log("What is uname and pass?", uname, pass);
     async function request() {
+      console.log("Logging in attempt");
       const userData = await fetch(
         loginURL, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({username: username, password: password})
+          body: JSON.stringify({username: uname, password: pass})
         }
       )
       .then(res => res.json())
       .then(returnData => {
+        console.log("What is returnData?", returnData)
         return returnData
       })
       .catch((err) => console.log('Error verifying Login', err));
@@ -35,7 +40,7 @@ const Login = () => {
         return navigate("/signup")
       }
     };
-
+    request();
   }
 
   const handleClick = () => {
@@ -44,15 +49,16 @@ const Login = () => {
 
   return(
 <div>
+  <div className='loginContainer'>
   <form onSubmit={handleSubmit}>
     <div className='input-container'>
       <label> Username </label>
       <input 
         type="text" 
         name="username" 
-        value={username}
+        value={uname}
         placeholder="Username"
-        onChange={(e) => setUsername(e.target.value)} 
+        onChange={(e) => setUname(e.target.value)} 
         required />
     </div>
     <div className='input-container'>
@@ -60,14 +66,15 @@ const Login = () => {
       <input 
         type="text" 
         name="username" 
-        value={password} 
+        value={pass} 
         placeholder="Password"
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(e) => setPass(e.target.value)}
         required />
     </div>
-    <button>Submit</button>
+    <button>Login</button>
     <button onClick={handleClick}>Sign Up</button>
   </form>
+  </div>
 </div>
   )
 }

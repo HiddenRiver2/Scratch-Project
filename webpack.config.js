@@ -4,7 +4,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   mode: 'development',
-  entry: './src/app.tsx',
+  entry: './src/index.tsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
@@ -21,10 +21,22 @@ module.exports = {
         exclude: /node_modules/,
         use: ['ts-loader'],
       },
+        {
+          test: /\.s?css$/,
+          use: [
+            // Creates `style` nodes from JS strings
+            "style-loader",
+            // Translates CSS into CommonJS,
+            "css-modules-typescript-loader",
+            "css-loader",
+            // Compiles Sass to CSS
+            "sass-loader",
+          ],
+        },
     ],
   },
   resolve: {
-    extensions: ['.jsx', '.js', '.ts', '.tsx'],
+    extensions: ['.jsx', '.js', '.ts', '.tsx', '.css', '.scss'],
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -32,7 +44,7 @@ module.exports = {
       filename: './index.html',
     }),
     new CopyPlugin({
-      patterns: [{ from: './src/scss/_game.scss' }],
+      patterns: [{ from: './src/scss/application.scss' }],
     }),
   ],
   devServer: {
@@ -40,7 +52,7 @@ module.exports = {
       directory: path.join(__dirname, './dist'),
     },
     proxy: {
-      '/api': 'http://localhost:3000',
+      '/': 'http://localhost:3000',
       secure: false
     }
   },
